@@ -1,10 +1,18 @@
 plugins {
     id 'java'
     id "com.jfrog.bintray" version "1.8.4"
+    id "maven-publish"
+}
+
+
+ext {
+    bintrayUser = System.getProperty("bintray.user")
+    bintrayKey = System.getProperty("bintray.key")
+    buildNumber = '0.0.1'
 }
 
 group 'in.ashwanik'
-version '1.0-SNAPSHOT'
+version buildNumber
 
 sourceCompatibility = 1.8
 
@@ -37,4 +45,88 @@ test {
                     "${result.failedTestCount} failures, " +
                     "${result.skippedTestCount} skipped)")
     }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+def pomConfig = {
+    licenses {
+        license {
+            name "MIT"
+            url "https://opensource.org/licenses/MIT"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "ashwanikumar04"
+            name "Ashwani Kumar"
+            email "ashwanikumar04@gmail.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/ashwanikumar04/java-utils"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId 'in.ashwanik'
+            artifactId 'java-utils'
+            version buildNumber
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Helper classes for common tasks in Java')
+                root.appendNode('name', 'java-utils')
+                root.appendNode('url', 'https://github.com/ashwanikumar04/java-utils')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publications = ['mavenPublication']
+
+    pkg {
+        repo = 'maven'
+        name = 'java-utils'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/ashwanikumar04/java-utils.git'
+        desc = 'Helper classes for common tasks in Java'
+        websiteUrl = 'https://github.com/ashwanikumar04/java-utils'
+        issueTrackerUrl = 'https://github.com/ashwanikumar04/java-utils/issues'
+        publicDownloadNumbers = true
+        version {
+            name = buildNumber
+            desc = 'Helper classes for common tasks in Java'
+            released = new Date()
+        }
+    }
+
 }
