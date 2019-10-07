@@ -1,7 +1,7 @@
 # java-utils
 
 
-[ ![Download](https://api.bintray.com/packages/ashwanikumar04/maven/java-utils/images/download.svg?version=0.0.1) ](https://bintray.com/ashwanikumar04/maven/java-utils/0.0.1/link)
+[![Build Status](https://travis-ci.org/ashwanikumar04/java-utils.svg?branch=master)](https://travis-ci.org/ashwanikumar04/java-utils) [ ![Download](https://api.bintray.com/packages/ashwanikumar04/maven/java-utils/images/download.svg?version=0.0.1) ](https://bintray.com/ashwanikumar04/maven/java-utils/0.0.1/link)
 
 
 
